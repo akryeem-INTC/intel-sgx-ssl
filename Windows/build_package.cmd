@@ -40,6 +40,7 @@ set OPENSSL_VERSION=%2
 set TEST_MODE=%4
 set OPENSSL_INSTALL_DIR=%SGXSSL_ROOT%\..\openssl_source\OpenSSL_install_dir_tmp
 set PROCESSOR_ARCHITECTURE=AMD64
+perl svn_revision.pl > sgx\libsgx_tsgxssl\tsgxssl_version.h
 
 set build_mode=%1
 goto %build_mode%
