@@ -88,6 +88,18 @@ rmdir /s /q %OPENSSL_VERSION%
 7z.exe x -y %OPENSSL_VERSION%.tar.gz
 7z.exe x -y %OPENSSL_VERSION%.tar
 
+REM Intel® Software Guard Extensions SSL uses rd_rand, so there is no need to get a random based on time
+REM sed -i "s|time_t tim;||g" %OPENSSL_VERSION%\crypto\bn\bn_rand.c
+call powershell -Command '(get-content %OPENSSL_VERSION%\crypto\bn\bn_rand.c) -replace ('time_t tim;','') | out-file %OPENSSL_VERSION%\crypto\bn\bn_rand.c'
+REM sed -i "s|time(&tim);||g" %OPENSSL_VERSION%\crypto\bn\bn_rand.c
+call powershell -Command '(get-content %OPENSSL_VERSION%\crypto\bn\bn_rand.c) -replace ('time(&tim);','') | out-file %OPENSSL_VERSION%\crypto\bn\bn_rand.c'
+REM sed -i "s|RAND_add(&tim, sizeof(tim), 0.0);||g" %OPENSSL_VERSION%\crypto\bn\bn_rand.c
+call powershell -Command '(get-content %OPENSSL_VERSION%\crypto\bn\bn_rand.c) -replace ('RAND_add(&tim, sizeof(tim), 0.0);','') | out-file %OPENSSL_VERSION%\crypto\bn\bn_rand.c'
+
+REM Remove AESBS to support only AESNI and VPAES
+REM sed -i '/BSAES_ASM/d' $OPENSSL_VERSION/Configure
+call powershell -Command '(get-content %OPENSSL_VERSION%\Configure) -replace ('BSAES_ASM','') | out-file %OPENSSL_VERSION%\Configure'
+
 copy /y  rand_win.c %OPENSSL_VERSION%\crypto\rand\
 copy /y  md_rand.c %OPENSSL_VERSION%\crypto\rand\
 
