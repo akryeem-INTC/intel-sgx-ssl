@@ -38,11 +38,11 @@
 
 //Weak symbol u_sgxssl_ftime64
 // 64-bit msvc will not prepend an underscore for symbols.
-#ifdef SE_64
+#ifdef _M_X64
 #pragma comment(linker, "/alternatename:u_sgxssl_ftime64=default_u_sgxssl_ftime64")
 #else
 #pragma comment(linker, "/alternatename:_u_sgxssl_ftime64=_default_u_sgxssl_ftime64")
-#endif
+#endif //_M_X64
 
 extern "C" {
 
